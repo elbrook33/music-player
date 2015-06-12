@@ -33,77 +33,77 @@ Shoes.app(
   undecorated: true
 ) do
 
-	background "#333"
+  background "#333"
 
 
   #### Elements ####
 
   # Album art
-	if File.exist? Image
-	then @i = image(
+  if File.exist? Image
+  then @i = image(
          Image,
          width:  ImageWidth,
          height: ImageWidth,
          margin: [ImageMargin, ImageMargin, ImageMargin, 0]
        )
-	end
+  end
 
   # Artist, album and track name text
-	@s = stack width: Width do
+  @s = stack width: Width do
 
-		background "#222"
-		inscription(
-			Album,
-			stroke: "#666",
-			margin: [TextMargin, 10, TextMargin, 0],
-			wrap:   "trim",
-			width:   Width - 2*TextMargin,
-			family: "Ubuntu"
-		)
-		inscription(
-			Song,
-			stroke: "#ccc",
-			margin: [TextMargin, 0, TextMargin, 8],
-			wrap:   "trim",
-			width:   Width - 2*TextMargin,
-			family: "Ubuntu"
-		)
+    background "#222"
+    inscription(
+      Album,
+      stroke: "#666",
+      margin: [TextMargin, 10, TextMargin, 0],
+      wrap:   "trim",
+      width:   Width - 2*TextMargin,
+      family: "Ubuntu"
+    )
+    inscription(
+      Song,
+      stroke: "#ccc",
+      margin: [TextMargin, 0, TextMargin, 8],
+      wrap:   "trim",
+      width:   Width - 2*TextMargin,
+      family: "Ubuntu"
+    )
 
-	end
+  end
   
   # The audio player
-	@player = audio Audio
-	@player.play
+  @player = audio Audio
+  @player.play
   
   
   #### Actions ####
 
   # Clicking on the text block opens a file browser
-	@s.click do `xdg-open "#{Root}"` end
-	
-	# Dragging moves the window
-	motion do |left, top|
+  @s.click do `xdg-open "#{Root}"` end
+  
+  # Dragging moves the window
+  motion do |left, top|
     button, x, y = self.mouse
     if button == 1
       if @dragging
-	      root_x, root_y = self.win.position
-	      self.win.move(
-	        root_x + (x - @ix),
-	        root_y + (y - @iy)
-	      )
-	    else
-	      @dragging = true
-	      @ix = x
-	      @iy = y
-	    end
+        root_x, root_y = self.win.position
+        self.win.move(
+          root_x + (x - @ix),
+          root_y + (y - @iy)
+        )
+      else
+        @dragging = true
+        @ix = x
+        @iy = y
+      end
     else
       @dragging = false
     end
   end
-	
-	# Right-clicking quits
-	self.click do |button, left, right|
-	  if button == 3 then exit end
-	end
+  
+  # Right-clicking quits
+  self.click do |button, left, right|
+    if button == 3 then exit end
+  end
 
 end
