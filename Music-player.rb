@@ -35,7 +35,6 @@ Shoes.app(
 
   background "#333"
 
-
   #### Elements ####
 
   # Album art
