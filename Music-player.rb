@@ -11,10 +11,10 @@ Audio = ARGV[0]
 Image = Root + "/.cover-image.png"
 Album = CGI::escapeHTML File.basename Root
 
-ImageMargin = 10
-ImageWidth = 200
-TextMargin = 13
-TextHeight = 58
+ImageMargin = 13
+ ImageWidth = 210
+ TextMargin = 13
+ TextHeight = 13 + 2*20 + 10 + 5 + 20 + 0
 
 Width = ImageWidth + 2*ImageMargin
 
@@ -33,7 +33,7 @@ Shoes.app(
   undecorated: true
 ) do
 
-  background "#333"
+  background "#222"
 
   #### Elements ####
 
@@ -49,12 +49,10 @@ Shoes.app(
 
   # Artist, album and track name text
   @s = stack width: Width do
-
-    background "#222"
     inscription(
       Album,
       stroke: "#666",
-      margin: [TextMargin, 10, TextMargin, 0],
+      margin: [TextMargin, 13, TextMargin, 0],
       wrap:   "trim",
       width:   Width - 2*TextMargin,
       family: "Ubuntu"
@@ -62,12 +60,46 @@ Shoes.app(
     inscription(
       Song,
       stroke: "#ccc",
-      margin: [TextMargin, 0, TextMargin, 8],
+      margin: [TextMargin, 0, TextMargin, 10],
       wrap:   "trim",
       width:   Width - 2*TextMargin,
       family: "Ubuntu"
     )
-
+  end
+  
+  # Controls
+  flow(
+    width: Width,
+    margin: [0, 0, 0, 0]
+  ) do
+    background "#2a2a2a"
+    
+    @pause = flow width: Width - TextMargin - 2*20 do
+      inscription(
+        "⏸",
+        stroke: "#666",
+        family: "Ubuntu",
+        margin: [TextMargin, 5, 0, 0]
+      )
+    end
+    @folder = flow width: 20 do
+      inscription(
+        "🖿",
+        stroke: "#666",
+        family: "Ubuntu",
+        align:  "right",
+        margin: [0, 5, 0, 0]
+      )
+    end
+    @stop = flow width: 20 do
+      inscription(
+        "⏹",
+        stroke: "#666",
+        family: "Ubuntu",
+        align:  "right",
+        margin: [0, 5, TextMargin, 0]
+      )
+    end
   end
   
   # The audio player
@@ -77,8 +109,10 @@ Shoes.app(
   
   #### Actions ####
 
-  # Clicking on the text block opens a file browser
-  @s.click do `xdg-open "#{Root}"` end
+  # Control buttons
+  @stop.click do exit end
+  @folder.click do `xdg-open "#{Root}"` end
+  # TODO: play/pause
   
   # Dragging moves the window
   motion do |left, top|
@@ -98,11 +132,6 @@ Shoes.app(
     else
       @dragging = false
     end
-  end
-  
-  # Right-clicking quits
-  self.click do |button, left, right|
-    if button == 3 then exit end
   end
 
 end
